@@ -24,9 +24,10 @@ const ProjectsSection = () => {
     <section className="py-24 px-4" id="projects">
       <div className="max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mb-12"
         >
           <p className="text-muted-foreground text-sm mb-2">
@@ -39,23 +40,36 @@ const ProjectsSection = () => {
           {projects.map((project, i) => (
             <motion.div
               key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, rotateY: 5 }}
+              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="border border-border rounded-lg p-5 bg-card hover:border-primary/30 transition-all group"
+              transition={{ delay: i * 0.15, type: "spring", stiffness: 100 }}
+              whileHover={{
+                y: -8,
+                boxShadow: "0 20px 40px -15px hsl(142 72% 50% / 0.15)",
+              }}
+              className="border border-border rounded-lg p-5 bg-card hover:border-primary/40 transition-colors duration-300 group"
             >
-              <FolderGit2 size={20} className="text-primary mb-3" />
+              <motion.div
+                whileHover={{ rotate: 15, scale: 1.2 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FolderGit2 size={20} className="text-primary mb-3" />
+              </motion.div>
               <h3 className="font-bold text-sm mb-2 group-hover:text-primary transition-colors">{project.title}</h3>
               <p className="text-xs text-muted-foreground font-sans mb-4 leading-relaxed">{project.description}</p>
               <div className="flex flex-wrap gap-1.5">
-                {project.tags.map((tag) => (
-                  <span
+                {project.tags.map((tag, j) => (
+                  <motion.span
                     key={tag}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 + j * 0.05 }}
                     className="text-[10px] px-2 py-1 rounded bg-secondary text-primary border border-border font-sans"
                   >
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>
