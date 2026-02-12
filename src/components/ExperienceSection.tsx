@@ -31,14 +31,24 @@ const experiences = [
   },
 ];
 
+const highlightVariants = {
+  hidden: { opacity: 0, x: -10 },
+  show: (j: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: j * 0.06, duration: 0.4 },
+  }),
+};
+
 const ExperienceSection = () => {
   return (
     <section className="py-24 px-4" id="experience">
       <div className="max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mb-12"
         >
           <p className="text-muted-foreground text-sm mb-2">
@@ -51,17 +61,26 @@ const ExperienceSection = () => {
           {experiences.map((exp, i) => (
             <motion.div
               key={exp.company}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              className="border border-border rounded-lg p-6 bg-card relative overflow-hidden group hover:border-primary/30 transition-colors"
+              transition={{ delay: i * 0.2, type: "spring", stiffness: 100 }}
+              whileHover={{ scale: 1.01 }}
+              className="border border-border rounded-lg p-6 bg-card relative overflow-hidden group hover:border-primary/30 transition-all duration-300"
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-primary/50 group-hover:bg-primary transition-colors" />
+              <motion.div
+                className="absolute top-0 left-0 w-1 h-full bg-primary/50"
+                whileHover={{ width: 4 }}
+                transition={{ duration: 0.2 }}
+              />
               <div className="flex items-start gap-4">
-                <div className="p-2 rounded-md bg-secondary mt-1">
+                <motion.div
+                  className="p-2 rounded-md bg-secondary mt-1"
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
                   <Briefcase size={18} className="text-primary" />
-                </div>
+                </motion.div>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
                     <h3 className="text-lg font-bold">{exp.company}</h3>
@@ -70,10 +89,23 @@ const ExperienceSection = () => {
                   <p className="text-xs text-primary mb-4 font-sans">{exp.location}</p>
                   <ul className="space-y-2">
                     {exp.highlights.map((item, j) => (
-                      <li key={j} className="text-sm text-muted-foreground font-sans flex gap-2">
-                        <span className="text-primary mt-1 shrink-0">›</span>
+                      <motion.li
+                        key={j}
+                        custom={j}
+                        variants={highlightVariants}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true }}
+                        className="text-sm text-muted-foreground font-sans flex gap-2"
+                      >
+                        <motion.span
+                          className="text-primary mt-1 shrink-0"
+                          whileHover={{ x: 3 }}
+                        >
+                          ›
+                        </motion.span>
                         <span>{item}</span>
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
                 </div>
